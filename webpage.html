@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDD: Lambda's Labyrinth</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMeaOVTGF8wzJqVEAFfwIOH9AlI2k8JiMAEZ8sSJM4DcwGAOM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzYCEHPNKA6iGIeztPlpgAXA/kwshGV9VFe" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .katex { font-size: 1.1em; }
+        .nav-item.active {
+            background-color: #0d9488; /* teal-600 */
+            color: white;
+        }
+        .tab-item.active {
+            border-color: #0d9488; /* teal-600 */
+            color: #0d9488;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div class="flex h-screen">
+        <nav class="w-64 bg-slate-800 text-white flex-shrink-0 hidden md:flex md:flex-col p-4">
+            <h1 class="text-2xl font-bold text-white mb-8 border-b border-slate-600 pb-4">Lambda's Labyrinth</h1>
+            <ul class="space-y-2" id="main-nav">
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700 active" data-target="overview">📖 Overview</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="storyline">📜 Storyline</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="mechanics">⚙️ Gameplay & Mechanics</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="learning">🧠 Learning Objectives</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="design">🎨 Design & Assets</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="drawbacks">⚠️ Drawbacks & Mitigation</a></li>
+            </ul>
+        </nav>
+
+        <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-20 p-2 bg-slate-800 text-white rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
+
+        <div id="mobile-menu" class="md:hidden fixed inset-0 bg-slate-800 text-white z-10 p-4 transform -translate-x-full transition-transform">
+             <h1 class="text-2xl font-bold text-white mb-8 border-b border-slate-600 pb-4">Lambda's Labyrinth</h1>
+             <ul class="space-y-2" id="mobile-main-nav">
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700 active" data-target="overview">📖 Overview</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="storyline">📜 Storyline</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="mechanics">⚙️ Gameplay & Mechanics</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="learning">🧠 Learning Objectives</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="design">🎨 Design & Assets</a></li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg transition-colors hover:bg-slate-700" data-target="drawbacks">⚠️ Drawbacks & Mitigation</a></li>
+            </ul>
+        </div>
+
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div id="content-container">
+                <section id="overview" class="content-section">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Game Design Document: Lambda's Labyrinth</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Core Concept</h3>
+                            <p class="text-slate-600 leading-relaxed">"Lambda's Labyrinth" is a narrative-driven puzzle-adventure game where players embody Cam Arlen, a disillusioned computer linguist. Through mysterious circumstances, Cam stumbles upon a hidden, functional layer of reality governed by the principles of Lambda Calculus and Combinatory Logic. Players learn these advanced computer science concepts by manipulating the game world through interactive puzzles, as Cam's perception of reality shifts and expands. The game explores profound themes of identity, choice, and the nature of abstraction, culminating in a climactic decision that redefines Cam's existence.</p>
+                        </div>
+
+                         <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Target Audience & Genre</h3>
+                            <ul class="space-y-2 text-slate-600 list-disc list-inside">
+                                <li><strong>Primary Audience:</strong> Players interested in logical puzzles, narrative-rich indie games, and philosophical themes.</li>
+                                <li><strong>Secondary Audience:</strong> Computer science students, educators, and professionals seeking an engaging learning tool.</li>
+                                <li><strong>Genre:</strong> Puzzle-Adventure, Narrative-Driven, Serious Game.</li>
+                                <li><strong>Age Rating:</strong> Teen+ (due to philosophical complexity).</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Setting & Timeline</h3>
+                            <p class="text-slate-600 leading-relaxed">The game is set in a <strong>late 2000s to early 2010s</strong> contemporary world. This period allows for the technology (USB drives, basic HTML, command-line interfaces, older monitor types) to feel grounded and relatable as "mundane," providing a strong contrast to the unfolding "magical" reality of functional logic.</p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Key Themes</h3>
+                            <ul class="space-y-2 text-slate-600 list-disc list-inside">
+                                <li><strong>Abstraction & Reality:</strong> Is fundamental reality built from functions/logic?</li>
+                                <li><strong>Identity:</strong> Cam's journey of self-discovery and questioning existence.</li>
+                                <li><strong>Choice & Consequence:</strong> How logical decisions impact narrative outcomes.</li>
+                                <li><strong>Order vs. Chaos:</strong> The conflict between structured logic and unbounded paradoxes.</li>
+                                <li><strong>The Mundane Made Magical:</strong> The shift from corporate life to logical awakening.</li>
+                                <li><strong>Knowledge & Power:</strong> The ability to manipulate reality through code.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="storyline" class="content-section hidden">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Detailed Storyline & Narrative Flow</h2>
+                    
+                    <div class="border-b border-slate-200 mb-6">
+                        <nav class="-mb-px flex space-x-6" id="act-tabs">
+                            <a href="#" class="tab-item whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-teal-600 hover:border-teal-500 active" data-act="act1">Act I: Initiation</a>
+                            <a href="#" class="tab-item whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-teal-600 hover:border-teal-500" data-act="act2">Act II: The Order</a>
+                            <a href="#" class="tab-item whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-teal-600 hover:border-teal-500" data-act="act3">Act III: Truth Functions</a>
+                            <a href="#" class="tab-item whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-teal-600 hover:border-teal-500" data-act="act4">Act IV: Reduction Point</a>
+                            <a href="#" class="tab-item whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg text-slate-500 hover:text-teal-600 hover:border-teal-500" data-act="act5">Act V: The Final Decision</a>
+                        </nav>
+                    </div>
+
+                    <div id="act-content">
+                        <div id="act1" class="act-pane grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-teal-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 1: The Office</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Mundane becomes magical, a slow burn of digital awakening."</p>
+                                <p class="text-slate-600 mb-3">You are Cam Arlen, a once-brilliant computer linguist, now resigned to a monotonous corporate job. One day, a mysterious, unmarked **USB drive** arrives. Opening `lambda.html` triggers a command-line program with odd symbols. You accidentally "solve" a few patterns (like `$\lambda x.x$`). An **email auto-opens** from your vanished mentor: “You’ve opened the door. Don’t stop now.”</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Identity function (`$\lambda x.x$`), basic function application.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-teal-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 2: Cam’s Apartment</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Familiar becomes uncanny, the world is subtly reshaped by newfound logic."</p>
+                                <p class="text-slate-600 mb-3">Sticky notes, books, and decor now speak in this new syntax. You solve **application puzzles** in your decor, and **unlock a safe** with a beta-reduction password. Inside, a journal entry: “There is an Order. They see function as reality.”</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Application of functions, Beta-reduction.</p>
+                            </div>
+                             <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-teal-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 3: Train Ride</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Disorienting, a gradual immersion into the Order's world."</p>
+                                <p class="text-slate-600 mb-3">On a train to a mysterious address, passengers speak in fragmented logic. A child hands you a drawing of the **Church numeral 2**. Your map folds itself into a recursive abstraction. The journey itself feels like a repeating function.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Conceptual abstraction, visual metaphors for recursion.</p>
+                            </div>
+                        </div>
+
+                        <div id="act2" class="act-pane hidden grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-purple-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 4: The Church of Combinators</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Mystical, ritualistic, awe-inspiring."</p>
+                                <p class="text-slate-600 mb-3">An abandoned cathedral filled with cables and glowing code. To enter, you must **encode your name as a lambda function**. You learn the Order's core belief: the world is fundamentally symbolic, and those who know the code can rewrite meaning.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Currying, Booleans (True/False functions).</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-purple-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 5: The Archive</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Scholarly, conspiratorial, revealing hidden history."</p>
+                                <p class="text-slate-600 mb-3">In a library of forbidden code, you **repair broken expressions** to unlock secrets. You learn of the "Combinatory War" between purists (Red Lambda) and chaos-seekers (Omega Cult). A terminal lets you simulate **Church numerals**, revealing the Order's encryption methods. A hidden message from your mentor warns: “Don’t trust the Inner Circle.”</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Church Numerals, Functional Arithmetic, Debugging.</p>
+                            </div>
+                             <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-purple-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 6: Hall of Mirrors</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Introspective, philosophical, subtly unsettling."</p>
+                                <p class="text-slate-600 mb-3">A dreamlike level where you meet reflections of yourself, each a logical transformation. They speak in mutated code, denying your reality. You solve **alpha-renaming puzzles**, questioning if identity is fixed or just a pattern of logic.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Alpha-renaming (variable equivalence), variable scope.</p>
+                            </div>
+                        </div>
+
+                        <div id="act3" class="act-pane hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                           <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 7: The Labyrinth</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Challenging, moral, decisive."</p>
+                                <p class="text-slate-600 mb-3">You are trapped in a maze built from functional logic. **Boolean pathways appear or disappear** based on your reductions of `IF/THEN/ELSE` expressions. Voices echo: “If you choose True, you must face consequence. If False, you embrace paradox.” Your logical choices become moral dilemmas.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Deep mastery of If/Else logic.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 8: Combinator Arena</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Competitive, strategic, a rite of passage."</p>
+                                <p class="text-slate-600 mb-3">A symbolic duel against another initiate using only **SKI combinators**, forcing you to think without variables. You unlock the **Y combinator**, learning its power for recursion. The crowd chants your symbolic name. You have initiated, but feel uneasy.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">SKI calculus, recursion, fixpoints (Y combinator).</p>
+                            </div>
+                        </div>
+
+                        <div id="act4" class="act-pane hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                           <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 9: The Archive Revisited (Corrupted)</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Chaotic, existential dread, disorienting."</p>
+                                <p class="text-slate-600 mb-3">The Archive is now glitching violently, overrun with self-replicating functions, infinite loops, and malformed `$\Omega$` expressions. Reality distorts. You must **outwit `$\Omega$` traps** and restore logical order to the chaotic systems.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Non-termination, infinite recursion, Omega (`$\Omega$`).</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 10: Temple of Identity</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Profound, introspective, climactic for personal identity."</p>
+                                <p class="text-slate-600 mb-3">You must construct your own essence by reducing a giant expression to a **self-defining form**. You encounter abstracted versions of yourself, representing different life paths. Are you still Cam, or just a function emulating Cam?</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Self-application, complex recursive forms.</p>
+                            </div>
+                        </div>
+                        
+                        <div id="act5" class="act-pane hidden grid grid-cols-1 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-amber-500">
+                                <h4 class="text-xl font-semibold mb-2">Scene 11: Inner Sanctum</h4>
+                                <p class="text-sm font-medium text-slate-500 mb-4 italic">"Climactic test. Choose logic over reality—or find a new balance."</p>
+                                <p class="text-slate-600 mb-3">You reach the Order’s inner machine, a device that can reprogram human minds. A trinity of leaders offer three paths: **1. Join** and spread abstraction to humanity. **2. Destroy** the Order and seal away the truth. **3. Abstract yourself** and transcend human thought. Your choice is not dialogue, but a **series of precise, final reductions** on a single, complex expression that determines the ending.</p>
+                                <h5 class="font-semibold mt-4 mb-2 text-slate-700">Learning Focus</h5>
+                                <p class="text-slate-600">Combinatory completeness, synthesis of all prior concepts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="mechanics" class="content-section hidden">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Gameplay & Mechanics</h2>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Core Game Mechanics</h3>
+                             <ul class="space-y-4 text-slate-600 list-disc list-inside">
+                                <li><strong>Interactive Lambda Puzzle System:</strong> Visual representation of lambda expressions as interactive blocks or nodes. Player directly manipulates elements to perform reductions, which is the primary method of progression.</li>
+                                <li><strong>Environmental Transformation:</strong> The game world dynamically changes to reflect Cam's deepening understanding. From subtle glitches to overt code manifestation and reality distortion.</li>
+                                <li><strong>Narrative Choice Interface:</strong> Key narrative decisions are presented as complex functional expressions that the player must correctly reduce to achieve their desired outcome.</li>
+                                <li><strong>In-Game Journal/Lore System:</strong> Provides optional context, deeper theory, and objective tracking for players.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Transition Strategies (Linking Scenes)</h3>
+                             <ul class="space-y-4 text-slate-600 list-disc list-inside">
+                                <li><strong>Crystal Clear Objectives:</strong> Each scene ends with a clear narrative prompt (dialogue, journal update) indicating the next goal.</li>
+                                <li><strong>Purposeful Transitions:</strong> Using short cinematic cutscenes, playable environmental walkthroughs, and interactive mini-puzzles to bridge scenes.</li>
+                                <li><strong>Pacing & Emotional Arc:</strong> Alternating between puzzle-heavy and narrative/exploration-focused scenes to prevent fatigue.</li>
+                                <li><strong>Consistent Visual & Auditory Language:</strong> The art style and soundscape evolve with the narrative to maintain immersion.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="learning" class="content-section hidden">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Core Learning Objectives</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 text-slate-700">
+                            <li class="p-2 border-b">Identity Function ($\lambda x.x$)</li>
+                            <li class="p-2 border-b">Function Application</li>
+                            <li class="p-2 border-b">Beta-Reduction (Substitution)</li>
+                            <li class="p-2 border-b">Conceptual Abstraction</li>
+                            <li class="p-2 border-b">Currying</li>
+                            <li class="p-2 border-b">Booleans (True/False as functions)</li>
+                            <li class="p-2 border-b">Church Numerals & Arithmetic</li>
+                            <li class="p-2 border-b">Alpha-Renaming (Variable Equivalence)</li>
+                            <li class="p-2 border-b">Variable Scope</li>
+                            <li class="p-2 border-b">If/Else Logic using Lambda Expressions</li>
+                            <li class="p-2 border-b">SKI Calculus (Variable-Free Logic)</li>
+                            <li class="p-2 border-b">Recursion & Fixpoints (Y Combinator)</li>
+                            <li class="p-2 border-b">Non-Termination & Infinite Recursion ($\Omega$)</li>
+                            <li class="p-2 border-b">Self-Application</li>
+                            <li class="p-2 border-b">Combinatory completeness</li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <section id="design" class="content-section hidden">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Design & Scene 1 Assets</h2>
+                     <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Character Model (Cam Arlen)</h3>
+                            <p class="text-slate-600 mb-3">Looks like a "once-brilliant" individual now dulled by monotony (e.g., slightly slumped posture, simple corporate attire).</p>
+                             <ul class="space-y-2 text-slate-600 list-disc list-inside">
+                                <li><strong>Source:</strong> <a href="https://www.mixamo.com/" target="_blank" class="text-teal-600 hover:underline">Mixamo</a> (for rigged base mesh and animations), <a href="https://readyplayer.me/" target="_blank" class="text-teal-600 hover:underline">Ready Player Me</a> (for stylized avatar), or custom modeling in Blender.</li>
+                             </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Environment & Props</h3>
+                             <p class="text-slate-600 mb-3">A generic corporate cubicle adhering to late 2000s/early 2010s aesthetics (chunky tech, drab colors).</p>
+                             <ul class="space-y-2 text-slate-600 list-disc list-inside">
+                                 <li><strong>Computer Setup:</strong> Chunky LCD monitor, beige PC tower, standard wired keyboard/mouse. Source: <a href="https://sketchfab.com/search?q=old+monitor+lcd+3d&type=models" target="_blank" class="text-teal-600 hover:underline">Sketchfab</a></li>
+                                 <li><strong>Office Furniture:</strong> Laminate desk, ergonomic chair, filing cabinet. Source: <a href="https://sketchfab.com/search?q=office+desk+3d&type=models" target="_blank" class="text-teal-600 hover:underline">Sketchfab</a> or Unity/Unreal Asset Stores.</li>
+                                 <li><strong>Clutter:</strong> Pens, staplers, paper stacks, empty coffee mug. Source: <a href="https://sketchfab.com/search?q=desk+props+3d&type=models" target="_blank" class="text-teal-600 hover:underline">Sketchfab</a>.</li>
+                                 <li><strong>Mysterious USB Drive:</strong> A sleek, unusual design. Source: <a href="https://sketchfab.com/search?q=usb+flash+drive+3d&type=models" target="_blank" class="text-teal-600 hover:underline">Sketchfab</a> or custom modeling.</li>
+                             </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                             <h3 class="text-2xl font-semibold mb-3 text-teal-700">Dynamic Asset Generation (In-Engine)</h3>
+                             <ul class="space-y-4 text-slate-600 list-disc list-inside">
+                                 <li><strong>Command Line Interface (CLI):</strong> Render dynamic text onto the monitor screen material. Use a custom font for abstract symbols.</li>
+                                 <li><strong>Glitch Effects:</strong> Apply custom shaders (via Unity Shader Graph/Unreal Material Editor) to the monitor material to simulate digital static, flickering, or screen tears.</li>
+                                 <li><strong>Subtle Transformations:</strong> Use shaders for glows (emissive materials) and distortion (vertex displacement) on objects. Use particle systems for brief visual "clicks" and effects.</li>
+                             </ul>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="drawbacks" class="content-section hidden">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-6">Drawbacks & Mitigation</h2>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-semibold text-red-700">High Barrier to Entry (Lambda Calculus Complexity)</h3>
+                            <p class="text-slate-600 mt-2"><strong>Mitigation:</strong> Extremely gradual introduction, highly visual and interactive tutorials, optional in-game journal for deeper explanations, and a tiered hint system.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-semibold text-red-700">Maintaining Engagement Amidst Difficulty</h3>
+                            <p class="text-slate-600 mt-2"><strong>Mitigation:</strong> Strong narrative hook, varied puzzle types, dynamic environmental changes, and meaningful narrative choices tied to puzzle outcomes. Pacing will be balanced with "breather" moments.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-semibold text-red-700">Visualizing Abstraction & Preventing Clutter</h3>
+                            <p class="text-slate-600 mt-2"><strong>Mitigation:</strong> Clear UI/UX for lambda expression manipulation, consistent visual language for abstract concepts, and thoughtful dynamic environment design.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h3 class="text-xl font-semibold text-red-700">Narrative-Gameplay Integration Challenges</h3>
+                            <p class="text-slate-600 mt-2"><strong>Mitigation:</strong> Core narrative choices are *solved* through logical puzzles, making gameplay directly drive the story. Environmental storytelling reinforces learning and narrative themes.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainNav = document.getElementById('main-nav');
+            const mobileMainNav = document.getElementById('mobile-main-nav');
+            const contentContainer = document.getElementById('content-container');
+            const actTabs = document.getElementById('act-tabs');
+            const actContent = document.getElementById('act-content');
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            function renderLatex() {
+                if (window.renderMathInElement) {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                        ]
+                    });
+                }
+            }
+
+            function setActiveSection(targetId, navContainer) {
+                // Handle content sections
+                const sections = contentContainer.querySelectorAll('.content-section');
+                sections.forEach(section => {
+                    section.classList.toggle('hidden', section.id !== targetId);
+                });
+
+                // Handle nav items
+                const navItems = navContainer.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    item.classList.toggle('active', item.dataset.target === targetId);
+                });
+
+                if (targetId === 'storyline') {
+                    // Default to Act 1 when storyline is shown
+                    setActiveAct('act1');
+                }
+                
+                renderLatex();
+            }
+            
+            function setActiveAct(targetActId) {
+                // Handle act panes
+                const actPanes = actContent.querySelectorAll('.act-pane');
+                actPanes.forEach(pane => {
+                    pane.classList.toggle('hidden', pane.id !== targetActId);
+                });
+                
+                // Handle act tabs
+                const tabItems = actTabs.querySelectorAll('.tab-item');
+                tabItems.forEach(item => {
+                     item.classList.toggle('active', item.dataset.act === targetActId);
+                });
+                 renderLatex();
+            }
+
+            function handleNavClick(event, navContainer) {
+                if (event.target.tagName === 'A' && event.target.dataset.target) {
+                    event.preventDefault();
+                    const targetId = event.target.dataset.target;
+                    setActiveSection(targetId, mainNav); // Always use main nav for styling consistency
+                    setActiveSection(targetId, mobileMainNav);
+                    
+                    // Close mobile menu on click
+                    if(mobileMenu.classList.contains('translate-x-0')) {
+                        mobileMenu.classList.remove('translate-x-0');
+                        mobileMenu.classList.add('-translate-x-full');
+                    }
+                }
+            }
+            
+            mainNav.addEventListener('click', (e) => handleNavClick(e, mainNav));
+            mobileMainNav.addEventListener('click', (e) => handleNavClick(e, mobileMainNav));
+
+            actTabs.addEventListener('click', function(event) {
+                 if (event.target.tagName === 'A' && event.target.dataset.act) {
+                    event.preventDefault();
+                    const targetActId = event.target.dataset.act;
+                    setActiveAct(targetActId);
+                }
+            });
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('-translate-x-full');
+                mobileMenu.classList.toggle('translate-x-0');
+            });
+
+            // Initial render
+            setActiveSection('overview', mainNav);
+        });
+    </script>
+</body>
+</html>
