@@ -14,6 +14,13 @@
             --highlight-color: #0f3460;
             --gradient-start: #0a0a1a;
             --gradient-end: #0c0c20;
+            --nav-bg: #0d1326;
+            --nav-link-hover: #2a3d5e;
+            --tab-inactive: #3a475e;
+            --tab-active: var(--accent-color);
+            --tab-text-inactive: #a0a0a0;
+            --tab-text-active: white;
+            --card-bg: #2a3d5e; /* New: for sub-section cards */
         }
 
         body {
@@ -24,6 +31,13 @@
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             color: var(--text-color);
             overflow-x: hidden;
+            /* Animation for body background */
+            animation: backgroundShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         .container {
@@ -32,12 +46,15 @@
             padding: 20px;
         }
 
+        /* Header */
         header {
             text-align: center;
             padding: 60px 20px;
             background: rgba(0, 0, 0, 0.4);
             border-bottom: 2px solid var(--accent-color);
             margin-bottom: 40px;
+            /* Animation for header - still on page load */
+            animation: fadeInSlideDown 1s ease-out forwards;
         }
 
         h1 {
@@ -55,6 +72,19 @@
             color: #ccc;
         }
 
+        /* Keyframes for header animation */
+        @keyframes fadeInSlideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* General Section Styling */
         .section {
             background: var(--secondary-bg);
             border-radius: 10px;
@@ -64,6 +94,17 @@
             position: relative;
             overflow: hidden;
             border: 1px solid var(--highlight-color);
+            z-index: 1;
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Class added by JavaScript when section is visible */
+        .section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .section::before {
@@ -119,53 +160,133 @@
             padding-bottom: 5px;
         }
 
-        .stage-card {
-            background: var(--highlight-color);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
+        h4 {
+            font-family: 'Roboto', sans-serif;
+            color: var(--accent-color);
+            margin-top: 0; /* Adjusted for card layout */
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+            padding-bottom: 5px;
+        }
+
+        /* Stage Card Styling (Vertical Tabs) */
+        .stage-nav {
+            flex: 0 0 250px; /* Fixed width for vertical tabs */
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 20px 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--highlight-color);
+        }
+
+        .stage-nav button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--tab-text-inactive);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* Added transform for hover */
+            border-left: 3px solid transparent;
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
-        .stage-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        .stage-nav button:hover {
+            background-color: var(--nav-link-hover);
+            color: var(--text-color);
+            transform: translateX(5px); /* Subtle slide on hover */
         }
 
-        .stage-card h3 {
-            color: var(--accent-color);
-            font-size: 1.8em;
-            margin-top: 0;
-            margin-bottom: 15px;
-            border-bottom: none;
-            padding-bottom: 0;
+        .stage-nav button.active-stage {
+            background-color: var(--tab-active);
+            color: var(--tab-text-active);
+            border-left: 3px solid var(--accent-color);
+            box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.3);
         }
 
-        .stage-card strong {
-            color: var(--accent-color);
+        /* Stage Detail Content Area */
+        .gameplay-layout {
+            display: flex;
+            gap: 20px;
+            min-height: 80vh;
         }
 
-        .stage-card ul {
+        .stage-content {
+            flex-grow: 1;
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--highlight-color);
+        }
+
+        .stage-detail {
+            display: none;
+            padding: 0;
+            /* Animation for stage detail content - re-applied on tab switch */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .stage-detail.active-stage-detail {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* New: Styling for sub-section cards */
+        .stage-sub-section-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px; /* Space between cards */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--highlight-color);
+            /* Animation for cards - re-applied on tab switch */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        /* Delay for cards within a stage detail (applied by JS when visible) */
+        .stage-detail.active-stage-detail .stage-sub-section-card:nth-child(1) { transition-delay: 0.1s; }
+        .stage-detail.active-stage-detail .stage-sub-section-card:nth-child(2) { transition-delay: 0.2s; }
+        .stage-detail.active-stage-detail .stage-sub-section-card:nth-child(3) { transition-delay: 0.3s; }
+        .stage-detail.active-stage-detail .stage-sub-section-card:nth-child(4) { transition-delay: 0.4s; }
+        /* Add more as needed for more cards */
+
+
+        .stage-sub-section-card:last-child {
+            margin-bottom: 0; /* No margin after the last card */
+        }
+
+        .stage-sub-section-card ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
-        .stage-card ul li {
-            margin-bottom: 10px;
+        .stage-sub-section-card ul li {
+            margin-bottom: 8px;
             padding-left: 20px;
             position: relative;
         }
 
-        .stage-card ul li::before {
+        .stage-sub-section-card ul li::before {
             content: '•';
             color: var(--accent-color);
             position: absolute;
             left: 0;
         }
 
+        /* CTA Button */
         .cta-button {
             display: inline-block;
             background: var(--accent-color);
@@ -178,13 +299,23 @@
             transition: background 0.3s ease, transform 0.3s ease;
             margin-top: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .cta-button.is-visible {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .cta-button:hover {
             background: #ff5e7b;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02); /* Added subtle scale on hover */
         }
 
+        /* Footer */
         footer {
             text-align: center;
             padding: 40px;
@@ -192,9 +323,53 @@
             border-top: 2px solid var(--accent-color);
             margin-top: 60px;
             color: #aaa;
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        footer.is-visible {
+            opacity: 1;
         }
 
         /* Responsive Design */
+        @media (max-width: 900px) {
+            .gameplay-layout {
+                flex-direction: column;
+            }
+            .stage-nav {
+                flex: none;
+                width: 100%;
+                padding: 10px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+            .stage-nav button {
+                width: auto;
+                flex-grow: 1;
+                text-align: center;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            .stage-nav button.active-stage {
+                border-left: none;
+                border-bottom: 3px solid var(--accent-color);
+                box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.3);
+            }
+            .stage-content {
+                padding: 20px;
+            }
+            .stage-detail {
+                padding: 0; /* Ensure no extra padding */
+            }
+            .stage-sub-section-card {
+                padding: 15px; /* Adjust card padding for smaller screens */
+                margin-bottom: 15px;
+            }
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5em;
@@ -205,9 +380,6 @@
             .section {
                 padding: 20px;
             }
-            .stage-card {
-                padding: 15px;
-            }
             .cta-button {
                 padding: 10px 20px;
                 font-size: 1em;
@@ -216,95 +388,552 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Functionia: The Lambda Loom</h1>
-            <p>A cognitive plane shattered by paradox. A forgotten language of logic. Reawaken the Lambda Loom and weave reality anew in a journey through abstract computation.</p>
-        </div>
-    </header>
-
     <main class="container">
-        <section class="section">
-            <h2>The Story</h2>
-            <p>Functionia was once a radiant realm, where pure thought shaped reality through the **Lambda Loom**, a metaphysical engine weaving meaning from lambda calculus. But eons ago, the **Reduction Collapse** corrupted its core, fracturing logic, time, and identity. Now, in its echoing ruins, the ancient language lies dormant.</p>
-            <p>You are the **Syntax Seeker**, drawn from the rigid dimension of "Imperativa" to a pulsing glyph: **λ**. Guided by whispers of broken evaluators and ancient scrolls, your quest is to reawaken the Loom, rebuilding foundational principles: identity, application, abstraction, recursion, truth, numbers, and logic gates. Restore meaning to a world consumed by meaninglessness.</p>
-        </section>
+        <div id="home">
+            <header>
+                <div class="container">
+                    <h1>Functionia: The Lambda Loom</h1>
+                    <p>A cognitive plane shattered by paradox. A forgotten language of logic. Reawaken the Lambda Loom and weave reality anew in a journey through abstract computation.</p>
+                </div>
+            </header>
 
-        <section class="section">
-            <h2>Your Journey Through Logic</h2>
+            <section class="section">
+                <h2>The Story</h2>
+                <p>Functionia was once a radiant realm, where pure thought shaped reality through the **Lambda Loom**, a metaphysical engine weaving meaning from lambda calculus. But eons ago, the **Reduction Collapse** corrupted its core, fracturing logic, time, and identity. Now, in its echoing ruins, the ancient language lies dormant.</p>
+                <p>You are the **Syntax Seeker**, drawn from the rigid dimension of "Imperativa" to a pulsing glyph: **λ**. Guided by whispers of broken evaluators and ancient scrolls, your quest is to reawaken the Loom, rebuilding foundational principles: identity, application, abstraction, recursion, truth, numbers, and logic gates. Restore meaning to a world consumed by meaninglessness.</p>
+            </section>
+            
+            <section class="section">
+                <h2>Your Journey Through Logic</h2>
+                <div class="gameplay-layout">
+                    <div class="stage-nav">
+                        <button class="stage-button active-stage" data-stage="stage1">🌑 1. Blank Village</button>
+                        <button class="stage-button" data-stage="stage2">🪞 2. Echo Valley</button>
+                        <button class="stage-button" data-stage="stage3">⚖️ 3. Twin Paths</button>
+                        <button class="stage-button" data-stage="stage4">🔢 4. Counting Hills</button>
+                        <button class="stage-button" data-stage="stage5">⚙️ 5. Circuit Engine</button>
+                        <button class="stage-button" data-stage="stage6">🌀 6. Binding Temple</button>
+                        <button class="stage-button" data-stage="stage7">🌱 7. Combinators</button>
+                        <button class="stage-button" data-stage="stage8">♾️ 8. Recursive Rift</button>
+                        <button class="stage-button" data-stage="stage9">💠 9. Lambda Loom</button>
+                    </div>
 
-            <div class="stage-card">
-                <h3>🌑 1. Awakening Thought – Blank Village</h3>
-                <p><strong>Narrative:</strong> You awaken with no memory in a silent, monochromatic world. A curious glyph, **λ**, pulses on a stone. The village's inert forms await your touch.</p>
-                <p><strong>Gameplay:</strong> Learn what a function is, abstraction (λ), and variables. Apply the **Identity Function** (`λx. x`) to "awaken" objects like a broken fountain or a dim scroll. Drag and drop glyphs to form expressions and witness beta reduction as colors return to the world.</p>
-                <p><strong>Mechanics:</strong> Glyph-based drag-and-drop UI, visual evaluation feedback, progressive unlocking of syntax. Restore silence to sound, grey to color.</p>
-            </div>
+                    <div class="stage-content">
+                        <div id="stage1" class="stage-detail active-stage-detail">
+                            <h3>🌑 1. Awakening Thought – Blank Village</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>The game opens with a black screen, slowly fading to a dull, monochromatic landscape. The air is still, the silence profound. You, the **Syntax Seeker**, awaken on cold, featureless ground. Your vision is blurry, colors muted to shades of grey. There's no memory of who you are or how you arrived. All that registers is a faint, rhythmic pulse emanating from a small, smooth stone nearby. As you reach for it, a single, glowing glyph, **λ**, appears etched into its surface. A whisper, barely audible, echoes in your mind: "Apply... define... become..."</p>
+                                <p>The Blank Village itself is less a settlement and more a collection of inert, abstract shapes. There are outlines of buildings, but they lack definition, substance, and color. Faded "scrolls" lie scattered, their surfaces blank. Broken tools, like a "water pump" that produces no water or a "torch" that gives no light, hint at a lost functionality.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Understand Abstraction (λ):</strong> Grasp that `λ` signifies "function definition," focusing on `λx. x`.</li>
+                                    <li><strong>Apply the Identity Function:</strong> Use `(λx. x) water → water` to visually awaken objects like fountains or sun dials, bringing color and sound back.</li>
+                                    <li><strong>Unlock Syntax Scrolls:</strong> Find and activate scrolls to visibly display new syntax elements and explain learned concepts.</li>
+                                    <li><strong>Reconstruct Broken Signs:
+                                    </strong> Apply the identity function to fragmented signs to make them whole.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Glyph-based UI:
+                                    </strong> Drag-and-drop system for constructing expressions with `λ`, variables, and values.</li>
+                                    <li><strong>Evaluation Visualizer:
+                                    </strong> Clear animations showing the beta reduction process as expressions are activated.</li>
+                                    <li><strong>Progressive Unlocking:
+                                    </strong> New glyphs and interactable objects become available as you solve puzzles.</li>
+                                    <li><strong>Haptic Feedback:
+                                    </strong> Subtle vibrations or sound cues for correct and incorrect applications.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Starts in stark black and white/grey; colors bloom as logic is restored (blue for water, yellow for light).</li>
+                                    <li>Silent at first, gradually fills with ambient sounds (fountain gurgle, chimes).</li>
+                                    <li>Correct lambda expressions glow faintly before reduction. Faded scrolls animate glyphs into place.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>🪞 2. Echoes of Logic – Echo Valley</h3>
-                <p><strong>Narrative:</strong> Following a faint echo, you enter a canyon of **Echo Stones** and confused **Echo Spirits**. They distort all input, remnants of functions that have lost their proper context.</p>
-                <p><strong>Gameplay:</strong> Master **Application** and **Beta Reduction**. Make Echo Stones reflect inputs correctly by assembling expressions like `(λx. x) stone → stone`. Introduce **Parentheses** to control the order of application, clearing the spirits' confusion.</p>
-                <p><strong>Mechanics:</strong> Advanced expression builder, parentheses tool for grouping, step-by-step visual beta reduction. Clear the valley's distortions with precise logic.</p>
-            </div>
+                        <div id="stage2" class="stage-detail">
+                            <h3>🪞 2. Echoes of Logic – Echo Valley</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>Following the echoing sound, you enter Echo Valley, a landscape of towering, moss-covered canyon walls. Throughout the valley are ancient, resonant "Echo Stones"—large, smooth monoliths that seem to absorb and then distort sounds and forms. Ethereal, shimmering figures, the **Echo Spirits**, drift around these stones. They are not malicious, but confused, endlessly repeating or twisting what they perceive, remnants of functions that have lost their proper input or context. They are like broken mirrors, reflecting imperfectly. You quickly realize the echoing sound is the repeated, distorted output of these spirits, waiting for a correct input to resonate truly.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Correct Echo Stone Outputs:
+                                    </strong> Encounter stones that output garbled sounds/images. Assemble `(λx. x) (your_input_value)` to make them reflect correctly.</li>
+                                    <li><strong>Disassemble & Reassemble:
+                                    </strong> Take corrupted expressions and reassemble them to achieve desired outputs via beta reduction.</li>
+                                    <li><strong>Introduce Parentheses:
+                                    </strong> Use parentheses glyphs to dictate the order of application in more complex expressions.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Expression Builder:
+                                    </strong> An evolved glyph UI for forming functions and applying them.</li>
+                                    <li><strong>Parentheses Tool:
+                                    </strong> A dedicated UI element to visually group parts of an expression for order of application.</li>
+                                    <li><strong>Visual Beta Reduction:
+                                    </strong> Step-by-step animation of variable substitution in Echo Stones.</li>
+                                    <li><strong>Sound Matching:
+                                    </strong> Puzzles requiring construction of expressions that produce specific sound patterns.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Canyon walls display glowing waveforms, distorting with errors, resolving clearly with correct inputs.</li>
+                                    <li>Echo Spirits are spectral, briefly solidifying into elegant forms upon correct reduction.</li>
+                                    <li>Valley sounds are full of lingering echoes, clearing and sharpening as puzzles are solved.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>⚖️ 3. The Twin Paths – Truth & Falsehood</h3>
-                <p><strong>Narrative:</strong> Two silent, colossal golems guard diverging paths. One resonates with truth, the other with falsehood. Their internal logic is stalled.</p>
-                <p><strong>Gameplay:</strong> Learn **Boolean Logic** in lambda calculus: `TRUE ≡ λx.λy. x` and `FALSE ≡ λx.λy. y`, and the **IF conditional** (`IF ≡ λp.λa.λb. p a b`). Test each golem to identify its nature, then construct correct Boolean expressions to activate gates and choose your path.</p>
-                <p><strong>Mechanics:</strong> Dedicated Boolean glyphs, interactive golem "switches," visual decision trees. Realign the fundamental principles of logical choice.</p>
-            </div>
+                        <div id="stage3" class="stage-detail">
+                            <h3>⚖️ 3. The Twin Paths – Truth & Falsehood</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>At the canyon split, two enormous, silent golems block the way. They are ancient guardians of logical consistency. One golem stands bathed in a serene, unwavering light, while the other is shrouded in a subtle, swirling distortion. You quickly discern that one golem reacts only to absolute truth, the other only to absolute falsehood. Their forms are partially crumbled, their internal "logic gears" stalled. To pass, you must understand and apply the fundamental Boolean values of Functionia: **TRUE** and **FALSE**, and the **IF** conditional. The path to the left feels clear and direct, the path to the right feels circuitous and confusing.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Introduce Booleans & IF:
+                                    </strong> Learn `TRUE ≡ λx.λy. x`, `FALSE ≡ λx.λy. y`, and `IF ≡ λp.λa.λb. p a b`.</li>
+                                    <li><strong>Identify the Golems:
+                                    </strong> Test each golem with `(IF TRUE) pass fail` and `(IF FALSE) pass fail` to determine which responds to truth or falsehood.</li>
+                                    <li><strong>Activate Golem Gates:
+                                    </strong> Construct and apply correct Boolean expressions (e.g., `TRUE` or `FALSE`) to open gates.</li>
+                                    <li><strong>Chain Conditions:
+                                    </strong> Solve puzzles involving nested `IF` statements to control sequences of gates.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Boolean Glyph Palette:
+                                    </strong> Distinct visual representations for `TRUE`, `FALSE`, and `IF`.</li>
+                                    <li><strong>Conditional "Switches":
+                                    </strong> Golems and gates act as visual switches, reacting based on reduced Boolean values.</li>
+                                    <li><strong>Visual Decision Trees:
+                                    </strong> Paths illuminate to show potential outcomes of logical choices.</li>
+                                    <li><strong>Golems' Internal Logic:
+                                    </strong> X-ray view or subtle animations show successful logical processing.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Paths lined with glowing decision trees: green for TRUE, red for FALSE.</li>
+                                    <li>"Truth" golem glows serene green, emits harmonious chimes; "Falsehood" golem shimmers red, hums dissonantly.</li>
+                                    <li>Golems slowly animate, stepping aside when logic is correct.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>🔢 4. Numerica – Counting Hills</h3>
-                <p><strong>Narrative:</strong> Ascending into the pulsing Counting Hills, you discover that numbers are not static values, but the repeated application of functions. Each rhythmic pulse is a song of functional iteration.</p>
-                <p><strong>Gameplay:</strong> Understand **Church Numerals**: `0 ≡ λf.λx. x`, `1 ≡ λf.λx. f x`, etc. Use these numerals to control environmental elements like platform movements or bridge extensions, activating sequences based on precise numerical applications.</p>
-                <p><strong>Mechanics:</strong> Church Numeral builder, visual iteration feedback, rhythmic audio cues for correct applications. Weave numerical harmony into the landscape.</p>
-            </div>
+                        <div id="stage4" class="stage-detail">
+                            <h3>🔢 4. Numerica – Counting Hills</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>Ascending the winding staircase, you arrive in the **Counting Hills**, a serene landscape of rolling hills and gentle slopes. The air here vibrates with a subtle, rhythmic energy, and the very ground seems to pulse with light. Small, ethereal creatures, the "Count Sprites," hop in precise sequences. You discover that in Functionia, numbers are not static quantities but dynamic processes—the repeated application of a function. Each ascent, each synchronized movement of the Count Sprites, is a living example of this principle. The hills sing a song of application, a chorus of repetition.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Introduce Church Numerals:
+                                    </strong> Understand `0 ≡ λf.λx. x`, `1 ≡ λf.λx. f x`, etc., as repeated function application.</li>
+                                    <li><strong>Control Movement with Numerals:
+                                    </strong> Construct Church numerals (e.g., `(2) jump`) to activate platforms or extend bridges the required number of units.</li>
+                                    <li><strong>Activate Number-Based Sequences:
+                                    </strong> Apply numerical inputs in specific sequences to activate panels or open doors.</li>
+                                    <li><strong>Count Elements & Apply:
+                                    </strong> Identify the "number" of objects in the environment and apply the corresponding Church numeral to interact with them.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Church Numeral Builder:
+                                    </strong> Specialized UI to construct numerals by layering `f` applications.</li>
+                                    <li><strong>Application Targets:
+                                    </strong> Environmental elements (bridges, platforms) have slots for numeral expressions.</li>
+                                    <li><strong>Visual Iteration:
+                                    </strong> Clear animations showing the function `f` being applied the correct number of times.</li>
+                                    <li><strong>Rhythmic Cues:
+                                    </strong> Distinct sound patterns accompany correct numerical applications.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Hills pulse with light, intensity/rhythm correlating to numerical functions (e.g., two flashes for `2`).</li>
+                                    <li>Background music shifts to rhythmic, percussive melodies; new layers added with correct operations.</li>
+                                    <li>"Count Sprites" mimic player actions, hopping in unison.</li>
+                                    <li>Ethereal "strands of application" glow between `f` and `x` in UI.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>⚙️ 5. The Circuit Engine – Arithmetic Caverns</h3>
-                <p><strong>Narrative:</strong> Below the hills lies the rusted **Circuit Engine**, a vast industrial complex. Its power is lost, its gears stalled. Ancient mathematical pulses flicker faintly.</p>
-                <p><strong>Gameplay:</strong> Define and apply fundamental **Arithmetic Functions** using Church numerals: `SUCC`, `PLUS`, `MULT`, `PRED`. Build complex arithmetic expressions to power generators, light up lamp circuits, and activate colossal mechanical doors, restoring the flow of computational energy.</p>
-                <p><strong>Mechanics:</strong> Function library for arithmetic operations, conduit visualizer showing numerical flow, interactive schematic puzzles. Reignite the engine of Functionia's power.</p>
-            </div>
+                        <div id="stage5" class="stage-detail">
+                            <h3>⚙️ 5. The Circuit Engine – Arithmetic Caverns</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>Below the harmonious Counting Hills lies the **Circuit Engine**, a vast, dark subterranean complex. Its colossal gears are rusted, its intricate conduits choked, and its once-vibrant lights extinguished. This was the heart of Functionia's computational power, where numbers were combined and transformed to fuel progress. Now, only the faintest whispers of ancient mathematical pulses can be heard. The Syntax Seeker must venture into the darkness, using the newly understood principles of Church numerals to define and apply fundamental arithmetic operations, restoring power to the rusted conduits and awakening the dormant machinery.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Define Arithmetic Functions:
+                                    </strong> Learn `SUCC`, `PLUS`, `MULT`, `PRED` using Church numerals.</li>
+                                    <li><strong>Power Generators:
+                                    </strong> Construct arithmetic expressions (e.g., `(PLUS 2 3)`) to produce specific numerical outputs required by generators.</li>
+                                    <li><strong>Light Up Lamp Circuits:
+                                    </strong> Provide series of arithmetic operations to illuminate arrays of lamps.</li>
+                                    <li><strong>Activate Mechanical Doors:
+                                    </strong> Unlock complex doors by performing sequences of arithmetic operations.</li>
+                                    <li><strong>Re-route Energy Flow:
+                                    </strong> Use `TRUE` or `FALSE` to route numerical output through different operations.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Function Library:
+                                    </strong> Access to defined arithmetic functions (`SUCC`, `PLUS`, `MULT`, `PRED`) as drag-and-drop glyphs.</li>
+                                    <li><strong>Nested Expression Builder:
+                                    </strong> UI supports building complex, deeply nested arithmetic expressions.</li>
+                                    <li><strong>Conduit Visualizer:
+                                    </strong> Glowing "wires" show numerical flow; intensity/color indicates value.</li>
+                                    <li><strong>Interactive Schematics:
+                                    </strong> Place function glyphs onto circuit diagrams to complete flows.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Caverns are initially dark; sections illuminate with warm, mechanical glows as generators power up.</li>
+                                    <li>Power flows through conduits as shimmering, colored liquids (light pulses brighter for larger numbers).</li>
+                                    <li>Ambient sound shifts to clanking and whirring machinery, with activated generator thrums.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>🌀 6. The Binding Temple – Temple of Names</h3>
-                <p><strong>Narrative:</strong> The Temple of Names is corrupted by conflicting logic. Scrolls flicker with overlapping bindings, and **Monks of Binding** are trapped in error loops. Ambiguity reigns.</p>
-                <p><strong>Gameplay:</strong> Master **Alpha Conversion** (renaming variables) and **Scoping**. Debug broken scrolls like `(λx. λx. x)` by renaming variables to avoid shadowing, clarifying the logical connections. Help the Monks align binding glyphs to their correct lambda binders.</p>
-                <p><strong>Mechanics:</strong> Variable renamer tool, binding trace visualizer, error indicators. Restore clarity and coherence to the temple's sacred texts.</p>
-            </div>
+                        <div id="stage6" class="stage-detail">
+                            <h3>🌀 6. The Binding Temple – Temple of Names</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>Emerging from the depths of the Circuit Engine, you find yourself before the **Temple of Names**. It is a majestic structure, but deeply corrupted. The very air around it crackles with logical static. Inside, ancient scrolls hang, their glyphs flickering, overlapping, and causing visual dissonance. Ethereal **Monks of Binding**, translucent and distressed, float aimlessly, unable to perform their duties. They are trapped in loops of logical error, unable to correctly link variables to their origins. You realize that the temple's integrity is compromised by ambiguous bindings, where names clash, and functions lose their intended scope.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Introduce Alpha Conversion & Scoping:
+                                    </strong> Learn that variable names don't change meaning, and how scope limits variable reach.</li>
+                                    <li><strong>Debug Broken Scrolls:
+                                    </strong> Identify and rename conflicting variables (e.g., `(λx. λx. x)` becomes `(λx. λy. y)`).</li>
+                                    <li><strong>Help Monks Align Bindings:
+                                    </strong> Visually connect variable glyphs to their correct `λ` binders.</li>
+                                    <li><strong>Solve Nested Scope Puzzles:
+                                    </strong> Correctly rename variables in deeply nested functions.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Variable Renamer:
+                                    </strong> Tool to click and rename variables, with visual conflict feedback.</li>
+                                    <li><strong>Binding Trace Visualizer:
+                                    </strong> Highlights parts of an expression within a variable's scope.</li>
+                                    <li><strong>Error Indicators:
+                                    </strong> Red static/flickering lines for conflicts, resolving to clear lines.</li>
+                                    <li><strong>Drag-and-Drop Binding:
+                                    </strong> Visually connect variables to their correct `λ` binders.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Temple filled with visual glitches and static; text flickers and blurs on scrolls.</li>
+                                    <li>Mist represents ambiguity, dissipating to reveal harmonious architecture as bindings are clarified.</li>
+                                    <li>Misaligned bindings create dissonant sounds; correct alignment results in satisfying clicks/chimes.</li>
+                                    <li>Monks are translucent and distressed, solidifying and becoming serene when fixes are made.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>🌱 7. Garden of Combinators – Nameless Sanctuary</h3>
-                <p><strong>Narrative:</strong> A serene garden, where logic exists without variables. Only pure shapes and forms remain, reflecting the fundamental interactions of the **Combinators**.</p>
-                <p><strong>Gameplay:</strong> Learn **Combinatory Logic**: `I ≡ λx. x`, `K ≡ λx.λy. x`, `S ≡ λf.λg.λx. f x (g x)`. Construct expressions using only `S`/`K`/`I` to recreate Boolean logic (e.g., `TRUE`, `FALSE`, `AND`, `NOT`) and activate variable-free gates.</p>
-                <p><strong>Mechanics:</strong> Combinator-only palette, live reduction visualizer for combinator interactions, "behavior match" puzzles. Discover the elegance of variable-free computation.</p>
-            </div>
+                        <div id="stage7" class="stage-detail">
+                            <h3>🌱 7. Garden of Combinators – Nameless Sanctuary</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>Stepping into the **Nameless Sanctuary**, you are enveloped in a profound tranquility. This is a place where the concept of a "variable" has been shed entirely. Logic exists in its rawest, most abstract form, represented not by named inputs but by the fundamental interactions of self-sufficient entities called **Combinators**. The garden itself is sparse, composed of elegant, unlabelled geometric forms, hinting at a purity of logic. The air is still, save for a gentle hum that seems to emanate from the very structure of reality itself. Here, logic is observed, not named.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Introduce Combinatory Logic:
+                                    </strong> Understand `I ≡ λx. x`, `K ≡ λx.λy. x`, `S ≡ λf.λg.λx. f x (g x)`.</li>
+                                    <li><strong>Construct Expressions:
+                                    </strong> Build expressions using only `S`/`K`/`I` to achieve specific outputs or behaviors (e.g., deriving `TRUE` or `FALSE` from combinators).</li>
+                                    <li><strong>Rebuild Variable-Free Gates:
+                                    </strong> Activate environmental mechanisms by constructing correct combinator sequences.</li>
+                                    <li><strong>Encode Boolean Logic:
+                                    </strong> Derive and implement `TRUE`, `FALSE`, `AND`, `OR`, `NOT`, and `IF` using only `S`/`K`/`I`.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Combinator Palette:
+                                    </strong> Only `I`, `K`, `S` glyphs available, with abstract visual representations.</li>
+                                    <li><strong>Live Reduction Visualizer:
+                                    </strong> Real-time preview of combinator reduction.</li>
+                                    <li><strong>"Behavior Match" System:
+                                    </strong> Build combinators to exhibit a target function's behavior (e.g., `NOT`).</li>
+                                    <li><strong>"Derivation Journal":
+                                    </strong> Save and test derived combinator functions for later use.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Garden is minimalist, abstract; "logic blooms" grow into complex, glowing patterns as combinators are built.</li>
+                                    <li>Abstract light patterns pulse between combinator forms.</li>
+                                    <li>Ambient sound is pure, resonant tones and harmonic frequencies, shifting with combinator interactions.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>♾️ 8. The Maze of Reflection – Recursive Rift</h3>
-                <p><strong>Narrative:</strong> You step into a self-repeating, fractal maze where paths loop infinitely and time folds back. **Looping Spirits** are trapped in endless cycles. This is recursion's domain.</p>
-                <p><strong>Gameplay:</strong> Understand the **Y Combinator** (`Y ≡ λf. (λx. f (x x)) (λx. f (x x))`), the key to recursion. Define and apply recursive functions (like factorial or Fibonacci) to "unwind" loops, stabilize paths, and resolve time paradoxes within the maze.</p>
-                <p><strong>Mechanics:</strong> Y Combinator tool, recursive definition builder, time-lapse/rewind mechanics for visualizing loops. Master the art of self-referential logic.</p>
-            </div>
+                        <div id="stage8" class="stage-detail">
+                            <h3>♾️ 8. The Maze of Reflection – Recursive Rift</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>Stepping through the fractal gate, you are plunged into the **Recursive Rift**, a bewildering maze where paths loop infinitely, and the landscape seems to fold back on itself. Every turn reflects another, every passage seems to lead back to its beginning. Time itself feels fluid, with echoes of past attempts flickering at the edges of your vision. This is the domain of recursion, where functions call themselves to solve problems. Without a fundamental "fixed point" to anchor these loops, the maze becomes an inescapable paradox. Ethereal "Looping Spirits" endlessly retrace their steps, trapped in their own self-referential functions.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Introduce the Y Combinator:
+                                    </strong> Learn `Y ≡ λf. (λx. f (x x)) (λx. f (x x))` for recursion.</li>
+                                    <li><strong>Define Recursive Functions:
+                                    </strong> Use the Y Combinator to define and apply functions like factorial or Fibonacci.</li>
+                                    <li><strong>Solve Looping Puzzles:
+                                    </strong> Apply fixed-point combinator functions to "unwind" infinite loops and stabilize maze sections.</li>
+                                    <li><strong>"Unwind" Time Loops:
+                                    </strong> Resolve repeating environmental events by applying correct recursive definitions.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Y Combinator Tool:
+                                    </strong> Special glyph that takes a recursive definition and returns a callable function.</li>
+                                    <li><strong>Recursive Definition Builder:
+                                    </strong> UI for constructing functions that self-call.</li>
+                                    <li><strong>Base Case / Recursive Step Visualizer:
+                                    </strong> Clear visual distinction between stopping and repeating parts of recursion.</li>
+                                    <li><strong>Time-Lapse / Rewind Mechanic:
+                                    </strong> Environmental feedback shows infinite loops and their resolution.</li>
+                                    <li><strong>Stack Visualizer:
+                                    </strong> (For complex recursion) UI element showing call stack growth/shrinkage.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Maze walls constantly shift, bend, and reflect, creating fractal patterns.</li>
+                                    <li>Time effects: brief rewinds, stuttering animations, repeating cycles resolving into smooth progression.</li>
+                                    <li>Looping Spirits endlessly perform tasks; glow with completion before fading when their loop is resolved.</li>
+                                    <li>Ambient music features complex, layering melodies with recurring motifs, finding harmony upon resolution.</li>
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="stage-card">
-                <h3>💠 9. The Core of Functionia – The Lambda Loom</h3>
-                <p><strong>Narrative:</strong> You stand before the **Lambda Loom**, the fractured heart of Functionia. Its strands are tangled, its light erratic. The world holds its breath as all your knowledge converges here.</p>
-                <p><strong>Final Challenge:</strong> Combine everything you've learned. Reconstruct massive logic towers by building complex programs using abstraction, Booleans, arithmetic, combinators, and recursion. Solve a final, grand recursive logic engine that must compute a fundamental truth from conflicting sources, re-weaving the very fabric of Functionia.</p>
-                <p><strong>Ending:</strong> The Syntax Seeker awakens the Loom. Time and logic realign. Functionia is reborn—not as it was, but more expressive, with you as its new interpreter, an intrinsic part of its logic, ensuring its continued, elegant evolution.</p>
-            </div>
-        </section>
-
-        <section class="section" style="text-align: center;">
-            <h2>Are You Ready to Weave Reality?</h2>
-            <a href="#" class="cta-button">Pre-Register Now</a>
-        </section>
+                        <div id="stage9" class="stage-detail">
+                            <h3>💠 9. The Core of Functionia – The Lambda Loom</h3>
+                            <div class="stage-sub-section-card">
+                                <h4>Story</h4>
+                                <p>You stand before the **Lambda Loom**, the fabled metaphysical engine that once wove all meaning, identity, and form in Functionia. It is colossal, an awe-inspiring structure of intertwined, ethereal strands of light, but it is deeply fractured. Its once harmonious hum is now a discordant thrum, its light erratic and dim. Across its vast framework, towering logical structures stand incomplete, missing crucial combinators, broken boolean gates, and silent numerical conduits. The very essence of Functionia aches for resolution. All your accumulated knowledge, every rebuilt principle, every restored connection, has led you to this ultimate challenge. The fate of Functionia, and its capacity for future meaning, rests upon your final act of interpretation.</p>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Gameplay</h4>
+                                <ul>
+                                    <li><strong>Combine Everything:
+                                    </strong> Build complex programs from scratch using all learned concepts.</li>
+                                    <li><strong>Reconstruct Core Combinator Chains:
+                                    </strong> Place combinators into specific Loom sockets to re-establish foundational truths.</li>
+                                    <li><strong>Rebuild Boolean Resolution Matrix:
+                                    </strong> Construct complex Boolean expressions to resolve conflicting inputs into a single truth.</li>
+                                    <li><strong>Reactivate Numerical Computation Engines:
+                                    </strong> Build advanced arithmetic expressions using Church numerals to power Loom segments.</li>
+                                    <li><strong>Fix Recursive Loom Strands:
+                                    </strong> Identify and apply Y Combinator-based functions to untangle looping, fractal structures.</li>
+                                    <li><strong>Final Paradox Resolution:
+                                    </strong> Construct a meta-function to resolve a fundamental logical paradox at the Loom's core, bringing complete stability.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Mechanics</h4>
+                                <ul>
+                                    <li><strong>Integrated UI:
+                                    </strong> All unlocked glyphs and functions are accessible in one comprehensive interface.</li>
+                                    <li><strong>Modular Construction:
+                                    </strong> The Loom itself acts as a large puzzle board; drag expressions onto specific "sockets."</li>
+                                    <li><strong>Diagnostic Feedback:
+                                    </strong> Visual and audio cues for correctness, hinting at expected logical types.</li>
+                                    <li><strong>Progress Indicators:
+                                    </strong> "Loom Integrity" bar fills as sections are restored.</li>
+                                    <li><strong>Interactive Loom Map:
+                                    </strong> Navigate between problem areas.</li>
+                                </ul>
+                            </div>
+                            <div class="stage-sub-section-card">
+                                <h4>Visuals & Audio</h4>
+                                <ul>
+                                    <li>Loom is a cosmic tapestry of light strands; initially dark/flickering/tangled.</li>
+                                    <li>Strands illuminate with vibrant colors (green for Booleans, blue for numbers) as components are restored.</li>
+                                    <li>Discordant thrum resolves into a harmonious symphony as Loom is restored.</li>
+                                    <li>Final paradox resolution is a grand visual spectacle: Loom glows, rearranges, sheds impurities.</li>
+                                    <li>Functionia, visible through Loom's core, re-coheres, colors deepen, structures define.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer>
         <p>&copy; 2025 Functionia Games. All rights reserved.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded and parsed');
+
+            // --- Vertical Stage Navigation Logic ---
+            const stageButtons = document.querySelectorAll('.stage-button');
+            const stageDetails = document.querySelectorAll('.stage-detail');
+            console.log('Stage buttons found:', stageButtons.length);
+            console.log('Stage details found:', stageDetails.length);
+
+            function showStage(stageId) {
+                console.log('Attempting to show stage:', stageId);
+                // Remove active class from all stage detail sections
+                stageDetails.forEach(detail => {
+                    detail.classList.remove('active-stage-detail');
+                    // Reset animation for re-triggering when a new stage is selected
+                    detail.style.opacity = '0';
+                    detail.style.transform = 'translateY(10px)';
+                });
+
+                // Find and add active class to the target stage detail section
+                const targetStageElement = document.getElementById(stageId);
+
+                if (targetStageElement) {
+                    targetStageElement.classList.add('active-stage-detail');
+                    // Re-apply animation properties to trigger transition
+                    setTimeout(() => {
+                        targetStageElement.style.opacity = '1';
+                        targetStageElement.style.transform = 'translateY(0)';
+                    }, 10); // Small delay to ensure display: block is applied first
+
+                    // Animate sub-section cards within the active stage
+                    const subSectionCards = targetStageElement.querySelectorAll('.stage-sub-section-card');
+                    subSectionCards.forEach((card, index) => {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 10 + (index * 100)); // Staggered animation
+                    });
+
+                    console.log('Activated stage detail:', stageId);
+                } else {
+                    console.warn('Target stage element not found:', stageId);
+                }
+
+                // Remove active class from all stage buttons
+                stageButtons.forEach(btn => {
+                    btn.classList.remove('active-stage');
+                });
+                // Add active class to the clicked stage button
+                const targetStageButton = document.querySelector(`.stage-button[data-stage="${stageId}"]`);
+                if (targetStageButton) {
+                    targetStageButton.classList.add('active-stage');
+                }
+            }
+
+            // Add click event listeners to all stage buttons
+            stageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log('Click event detected on stage button:', this.dataset.stage); // Debug log
+                    const targetStage = this.dataset.stage;
+                    console.log('Stage button clicked for stage:', targetStage);
+                    showStage(targetStage);
+                });
+            });
+
+            // --- Intersection Observer for scroll animations ---
+            const sections = document.querySelectorAll('.section');
+            const ctaButton = document.querySelector('.cta-button');
+            const footer = document.querySelector('footer');
+
+            const observerOptions = {
+                root: null, /* viewport */
+                rootMargin: '0px',
+                threshold: 0.1 /* 10% of element visible to trigger */
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); /* Stop observing once animated */
+                    }
+                });
+            }, observerOptions);
+
+            // Observe sections
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Observe CTA button
+            if (ctaButton) {
+                observer.observe(ctaButton);
+            }
+
+            // Observe Footer
+            if (footer) {
+                observer.observe(footer);
+            }
+
+            // --- Initial Load State ---
+            // On page load, activate the first stage.
+            if (stageButtons.length > 0) {
+                let initialStageToShow = stageButtons[0].dataset.stage;
+                const activeStageButton = document.querySelector('.stage-button.active-stage');
+                if (activeStageButton) {
+                    initialStageToShow = activeStageButton.dataset.stage;
+                }
+                console.log('Initial stage to show:', initialStageToShow);
+                showStage(initialStageToShow);
+            } else {
+                console.warn('No stage buttons found at all.');
+            }
+        });
+    </script>
 </body>
 </html>
