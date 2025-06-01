@@ -1,87 +1,35 @@
-# The Order of the Red Lambda - Game Design Extras
+# 🧩 Functionia: The Lambda Loom
 
-## Character Bios
+> *“Apply... define... become...”*
 
-### 1. Cam Arlen
-- **Role:** Protagonist
-- **Background:** A linguist-turned-IT tech with a knack for pattern recognition. Curious, skeptical, and quietly brilliant.
-- **Development:** Transforms from a passive worker to a logic-wielding truth-seeker.
-
-### 2. The Mentor ("Lambda Sage")
-- **Role:** Guide (Voice/Hologram)
-- **Background:** Former Order member who mysteriously vanished.
-- **Personality:** Cryptic, poetic, a philosophical teacher.
-
-### 3. The Curators
-- **Role:** Guardians of different logic gates
-- **Types:** Numeral Keeper, Substitution Guardian, Fixpoint Prophet
-- **Quirk:** Speak in encoded lambda expressions until decoded.
-
-### 4. Omega
-- **Role:** Antagonist/Rival
-- **Background:** Failed initiate obsessed with breaking recursion.
-- **Fight Style:** Uses infinite loops, paradoxes, and traps.
-
-### 5. Archive Keeper
-- **Role:** Logic AI guarding the Library
-- **Speech:** Alternates between riddles and pure lambda expressions.
-
-### 6. Mirror Cams
-- **Role:** Psychological opponents
-- **Theme:** Each reflects a possible “truth” of Cam’s identity.
+Welcome to **Functionia: The Lambda Loom**, a symbolic, narrative-driven puzzle game that weaves abstract thought, logic, and identity through a beautifully stylized Unreal Engine world grounded in the principles of **lambda calculus**.
 
 ---
 
-## Artwork Prompts
+## 🌌 Story Overview
 
-### 1. Red Lambda Symbol
-- A glowing rune, seen on cloaks, terminals, and thresholds.
+Functionia was once a radiant realm, where reality itself was shaped by pure thought through the metaphysical **Lambda Loom**. But after the catastrophic **Reduction Collapse**, logic, time, and meaning fractured. You are the **Syntax Seeker**, drawn from the rigid realm of *Imperativa*, guided only by the ancient symbol: `λ`.
 
-### 2. Subway to Lambda Central
-- Gothic steampunk vibes; cryptic code scribbled on windows.
-
-### 3. Church of Combinators
-- Techno-cathedral, stained-glass of logic expressions.
-
-### 4. The Archive
-- A glowing, endless library; books float and rearrange.
-
-### 5. Mirror Corridor
-- Infinite mirrored hallway where expressions distort.
-
-### 6. Inner Sanctum
-- Recursive environment of floating symbols and portals.
+Your journey: to reawaken the Lambda Loom and restore **foundational principles**—identity, abstraction, recursion, truth, logic gates, and more.
 
 ---
 
-## Learning Module & Gameplay Map
+## 🛠️ Development Overview
 
-### Act 1: Foundation
-- **Concepts:** Identity function, basic syntax.
-- **Puzzles:** Evaluate `(λx.x) a`, decode a name using abstraction.
-
-### Act 2: Abstraction
-- **Concepts:** Function abstraction, currying, Church numerals.
-- **Puzzles:** Encode names with nested `λ`, manipulate numeric data via Church encoding.
-
-### Act 3: Control
-- **Concepts:** Booleans, conditionals, logical flow.
-- **Puzzles:** Navigate logic maze; simulate `if-then-else` with lambda functions.
-
-### Act 4: Recursion & Identity
-- **Concepts:** Y combinator, fixpoints, infinite reductions.
-- **Puzzles:** Fix recursive expressions, detect looping structures, reflect identity via substitution logic.
-
-### Act 5: Synthesis
-- **Concepts:** SKI combinators, program as logical transformation.
-- **Final Challenge:** Reduce a mega-expression composed of all learned elements to determine game ending.
+- **Engine**: Unreal Engine 5+
+- **Project Template**: Third Person
+- **Core Systems**:
+  - Enhanced Input System
+  - Custom Game Mode & Player Controller
+  - Modular Blueprint architecture
 
 ---
 
-## Optional Game Systems
+## 📚 Educational Theme
 
-- **Symbol Editor:** Drag-and-drop logic board to construct and reduce lambda expressions.
-- **Function Duel System:** Turn-based symbolic logic battles with rival characters.
-- **Memory Map:** Visual graph of expressions Cam has encountered, solved, and created.
-- **New Game+:** Start over as a new Curator with access to deeper logical constructs.
-
+Functionia introduces players to core **lambda calculus** concepts in an intuitive, experiential way:
+- Identity functions
+- Abstraction
+- Beta reduction
+- Evaluation of expressions
+- Recursive problem-solving
