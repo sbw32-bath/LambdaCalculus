@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functionia: Stage 1 - Blank Village Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #1a1a2e;
+            --secondary-bg: #16213e;
+            --accent-color: #e94560;
+            --text-color: #e0e0e0;
+            --highlight-color: #0f3460;
+            --gradient-start: #0a0a1a;
+            --gradient-end: #0c0c20;
+            --nav-bg: #0d1326;
+            --nav-link-hover: #2a3d5e;
+            --tab-inactive: #3a475e;
+            --tab-active: var(--accent-color);
+            --tab-text-inactive: #a0a0a0;
+            --tab-text-active: white;
+            --card-bg: #2a3d5e; /* New: for sub-section cards */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: var(--text-color);
+            overflow-x: hidden;
+            /* Animation for body background */
+            animation: backgroundShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 40px;
+            /* Animation for header - still on page load */
+            animation: fadeInSlideDown 1s ease-out forwards;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            color: var(--accent-color);
+            text-shadow: 0 0 15px rgba(233, 69, 96, 0.7);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #ccc;
+        }
+
+        /* Keyframes for header animation */
+        @keyframes fadeInSlideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* General Section Styling */
+        .section {
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--highlight-color);
+            z-index: 1;
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Class added by JavaScript when section is visible */
+        .section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: radial-gradient(circle at center, rgba(15, 52, 96, 0.2) 0%, transparent 70%);
+            z-index: 0;
+            animation: pulse-glow 5s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            border-bottom: 1px dashed var(--highlight-color);
+            padding-bottom: 5px;
+        }
+
+        h4 {
+            font-family: 'Roboto', sans-serif;
+            color: var(--accent-color);
+            margin-top: 0; /* Adjusted for card layout */
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+            padding-bottom: 5px;
+        }
+
+        /* Stage Detail Content Area - adapted for single page */
+        .stage-content {
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--highlight-color);
+        }
+
+        /* New: Styling for sub-section cards */
+        .stage-sub-section-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px; /* Space between cards */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--highlight-color);
+            /* Animation for cards - applied by JS on scroll */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .stage-sub-section-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stage-sub-section-card:last-child {
+            margin-bottom: 0; /* No margin after the last card */
+        }
+
+        .stage-sub-section-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .stage-sub-section-card ul li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .stage-sub-section-card ul li::before {
+            content: '•';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+        }
+
+        /* CTA Button - not present on this page, but keeping styles for consistency */
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            transition: background 0.3s ease, transform 0.3s ease;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .cta-button.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cta-button:hover {
+            background: #ff5e7b;
+            transform: translateY(-3px) scale(1.02); /* Added subtle scale on hover */
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 2px solid var(--accent-color);
+            margin-top: 60px;
+            color: #aaa;
+            /* Initial state for scroll animation */
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        footer.is-visible {
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .stage-content {
+                padding: 20px;
+            }
+            .stage-sub-section-card {
+                padding: 15px; /* Adjust card padding for smaller screens */
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            .section {
+                padding: 20px;
+            }
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <div class="container">
+                <h1>Functionia: Stage 1 - Blank Village</h1>
+                <p>This guide will walk you through the essential steps to bring "Blank Village" to life in Unreal Engine, focusing on its unique visual, auditory, and gameplay mechanics.</p>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2>Detailed Breakdown</h2>
+            <div class="stage-content">
+                <div class="stage-sub-section-card">
+                    <h4>1. Project Setup & Core Systems</h4>
+                    <p>Unreal Engine Version: Start with the latest stable version of Unreal Engine (e.g., UE5).</p>
+                    <p>Project Template: Choose a "Third Person" or "First Person" template as a starting point, depending on your preferred player perspective. You'll heavily customize it.</p>
+                    <p>Input System: Utilize the Enhanced Input System for robust player controls (movement, interaction).</p>
+                    <p>Game Mode & Player Controller: Create custom Game Mode and Player Controller Blueprints to manage game state, player input, and UI interactions specific to your game.</p>
+                </div>
+                <div class="stage-sub-section-card">
+                    <h4>2. Environment Design: The Monochromatic Canvas</h4>
+                    <p>The Blank Village is characterized by its lack of definition and color, which gradually returns as logic is applied.</p>
+                    <h5>Level Design:</h5>
+                    <p>Layout: Design an open, somewhat desolate area. Use abstract, geometric shapes for "buildings" and "structures" that are mere outlines. Think minimalist, almost wireframe or untextured forms.</p>
+                    <h5>Assets:</h5>
+                    <ul>
+                        <li>Inert Buildings: Cubes, cylinders, basic architectural forms with no details.</li>
+                        <li>Faded Scrolls: Flat planes or rolled meshes.</li>
+                        <li>Broken Tools: A "water pump" (simple pipe and lever), a "torch" (stick with a placeholder sphere).</li>
+                        <li>The Lambda Stone: A smooth, distinct rock model.</li>
+                    </ul>
+                    <p>Placement: Strategically place these objects to guide the player, hinting at their lost functionality.</p>
+                    <h5>Materials & Shaders (The Color Bloom Effect):</h5>
+                    <p>This is crucial for the visual progression.</p>
+                    <ul>
+                        <li>Master Material: Create a versatile Master Material that can switch between monochromatic (desaturated) and full-color states.</li>
+                        <li>Use a Lerp node driven by a Scalar Parameter (e.g., ColorSaturation) to blend between a grayscale version of a texture/color and its full-color version.</li>
+                        <li>For the initial state, set ColorSaturation to 0 (grayscale).</li>
+                        <li>Instance Materials: Create Material Instances from your Master Material for each interactable object.</li>
+                        <li>Dynamic Material Instances: When an object is "awakened," create a Dynamic Material Instance at runtime and update its ColorSaturation parameter over time (e.g., using a Timeline in Blueprint) to animate the color blooming.</li>
+                        <li>Emissive Glow: Add an emissive component to your materials. When an object is awakened, increase its emissive strength and color to give it a subtle glow.</li>
+                    </ul>
+                    <h5>Lighting:</h5>
+                    <ul>
+                        <li>Initial State: Use a single, muted Directional Light and Sky Light to create a dull, overcast, almost shadowless environment. Keep light sources low in intensity.</li>
+                        <li>Post-Processing Volume: Utilize a Post-Process Volume to enforce the initial monochromatic look.</li>
+                        <li>Set Saturation to 0 or near 0.</li>
+                        <li>Adjust Contrast and Brightness to create a stark, lifeless feel.</li>
+                        <li>As the world awakens, dynamically adjust these Post-Process settings to allow colors to bleed back into the scene.</li>
+                    </ul>
+                </div>
+                <div class="stage-sub-section-card">
+                    <h4>3. Player Character: The Syntax Seeker</h4>
+                    <ul>
+                        <li>Character Model: A simple, perhaps slightly ethereal or silhouette-like character model. Focus on clear outlines rather than intricate textures initially.</li>
+                        <li>Movement: Implement standard character movement (walk, run, jump) using the Character Movement Component.</li>
+                        <li>Interaction Component: Add a Sphere or Box Collision component to your character (or camera) to act as an interaction trigger. When overlapping interactable objects, display a prompt.</li>
+                    </ul>
+                </div>
+                <div class="stage-sub-section-card">
+                    <h4>4. Core Gameplay Mechanics: The Lambda Loom System</h4>
+                    <p>This is where the unique logic of your game comes to life.</p>
+                    <h5>Glyph-based UI (UMG - Unreal Motion Graphics):</h5>
+                    <ul>
+                        <li>Widget Blueprint: Create a main UI Widget Blueprint (e.g., WBP_LambdaLoomUI).</li>
+                        <li>Glyph Elements: Create individual WBP_Glyph Widgets for λ, variables (x), and values (water, fountain, sun_dial). These should contain:
+                            <ul>
+                                <li>An Image for the glyph icon.</li>
+                                <li>A Button or Border to make them draggable.</li>
+                                <li>A Text Block for the glyph's name.</li>
+                            </ul>
+                        </li>
+                        <li>Drag-and-Drop System:
+                            <ul>
+                                <li>Implement OnDragDetected, OnDrop, and OnDragCancelled events on your glyph widgets and a "construction area" widget.</li>
+                                <li>When a glyph is dragged, create a DragDropOperation Blueprint.</li>
+                                <li>When dropped, check if the drop target is valid (e.g., a slot for a variable, or a function application slot).</li>
+                            </ul>
+                        </li>
+                        <li>Expression Construction: Visually represent the lambda expression. You can use Horizontal Boxes and Vertical Boxes in UMG to arrange glyphs. For (λx. x), you'd have a λ glyph, a variable x, a . (dot) glyph, and then another x. Parentheses can be visual borders.</li>
+                        <li>Evaluation Button: A button on the UI that, when clicked, triggers the "evaluation" of the constructed expression.</li>
+                    </ul>
+                    <h5>Interaction System:</h5>
+                    <ul>
+                        <li>Interactable Blueprint Interface: Create a Blueprint Interface (e.g., BPI_Interactable) with a function like Interact.</li>
+                        <li>Object Blueprints: Create Blueprints for each interactable object (e.g., BP_LambdaStone, BP_Fountain, BP_Scroll, BP_Sign).
+                            <ul>
+                                <li>Implement the BPI_Interactable interface.</li>
+                                <li>Add a Static Mesh component.</li>
+                                <li>Add a Box Collision component set to OverlapOnlyPawn.</li>
+                                <li>On Begin Overlap with the player, display an interaction prompt. On End Overlap, hide it.</li>
+                                <li>When the player presses the "Interact" key while overlapping, call the Interact function.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h5>Evaluation Visualizer (Beta Reduction):</h5>
+                    <ul>
+                        <li>Core Logic: In your Player Controller or a dedicated BP_LambdaEvaluator Actor, implement the logic for beta reduction.</li>
+                        <li>When the player "applies" an expression (e.g., (λx. x) water), parse the constructed expression.</li>
+                        <li>For (λx. x) YIELDING_VALUE, the logic should simply return YIELDING_VALUE.</li>
+                    </ul>
+                    <h5>Visual Feedback:</h5>
+                    <ul>
+                        <li>Glyph Animation: When an expression is evaluated, animate the glyphs. For (λx. x) water, the λx. part could shrink and disappear, and the x inside the body could visually transform into water.</li>
+                        <li>Object Awakening Animation: When a correct expression is applied to an object (e.g., BP_Fountain), trigger a Timeline in that object's Blueprint to:
+                            <ul>
+                                <li>Animate the ColorSaturation parameter on its Dynamic Material Instance from 0 to 1.</li>
+                                <li>Animate its Emissive strength.</li>
+                                <li>Play a particle effect (e.g., Niagara or Cascade system for blooming color, light particles).</li>
+                                <li>Play a sound cue.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h5>Progressive Unlocking:</h5>
+                    <ul>
+                        <li>Game State Management: Use a Game Instance Blueprint to store global game state, such as UnlockedGlyphs (an array of enums or strings) and AwakenedObjects (a map or array of booleans).</li>
+                        <li>Conditional Visibility: Your UI should only display glyphs that are in the UnlockedGlyphs array. Interactable objects might only become interactable once certain conditions are met (e.g., the Lambda Stone is activated).</li>
+                        <li>Unlock Events: When a puzzle is solved (e.g., the Lambda Stone is touched, a scroll is read), add the new glyphs/objects to the Game Instance's unlocked lists.</li>
+                    </ul>
+                    <h5>Haptic Feedback & Sound Cues:</h5>
+                    <ul>
+                        <li>Haptic Feedback: Use PlayHapticFeedback node in Blueprints on the Player Controller for correct/incorrect applications.</li>
+                        <li>Sound Cues: Create simple Sound Cues for:
+                            <ul>
+                                <li>Correct application (e.g., a chime).</li>
+                                <li>Incorrect application (e.g., a dull thud, a fizzle).</li>
+                                <li>Object awakening sounds (fountain gurgle, chimes for sun dial).</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="stage-sub-section-card">
+                    <h4>5. Specific Stage 1 Puzzles/Tasks</h4>
+                    <h5>Awakening the Lambda Stone:</h5>
+                    <ul>
+                        <li>Trigger: Player approaches and interacts with the BP_LambdaStone.</li>
+                        <li>Event: The stone emits a faint pulse (particle effect, sound cue). The λ glyph appears etched on its surface (a dynamic material change or a new mesh component becoming visible).</li>
+                        <li>Unlock: The λ glyph and the basic variable x glyphs become available in the UI. A tutorial prompt appears explaining "Apply... define... become..."</li>
+                    </ul>
+                    <h5>Applying the Identity Function ((λx. x) YIELDING_VALUE):</h5>
+                    <h6>Fountains/Sun Dials:</h6>
+                    <ul>
+                        <li>Puzzle: Find an inert BP_Fountain or BP_SunDial.</li>
+                        <li>Solution: Player drags λ, x, ., x into the UI to form λx. x. Then, they drag a "water" or "light" value glyph next to it to form (λx. x) water.</li>
+                        <li>Effect: Upon successful evaluation, the BP_Fountain's material transitions to blue, water particles activate, and a gurgling sound plays. The BP_SunDial's material transitions to yellow, light particles emit, and chimes play.</li>
+                    </ul>
+                    <h5>Unlock Syntax Scrolls:</h5>
+                    <ul>
+                        <li>Puzzle: Find BP_Scroll objects. They are initially blank.</li>
+                        <li>Solution: Player applies (λx. x) scroll_content (where scroll_content is an internal identifier for the scroll's data).</li>
+                        <li>Effect: The scroll's material animates, and text/glyphs appear on its surface, explaining concepts like "identity function" or "beta reduction." This could trigger a new UI panel displaying the learned concept.</li>
+                    </ul>
+                    <h5>Reconstruct Broken Signs:</h5>
+                    <ul>
+                        <li>Puzzle: Find BP_Sign objects with fragmented text or images.</li>
+                        <li>Solution: Player applies (λx. x) sign_piece to each fragment, or (λx. x) complete_sign_data to the whole sign.</li>
+                        <li>Effect: The sign's material animates, and the fragmented pieces visually snap together or fill in, making the sign whole and legible.</li>
+                    </ul>
+                </div>
+                <div class="stage-sub-section-card">
+                    <h4>6. Visuals & Audio Implementation Details</h4>
+                    <ul>
+                        <li>Color Blooming: As described in Materials & Shaders, use Timelines in Blueprints to smoothly interpolate material parameters.</li>
+                    </ul>
+                    <h5>Soundscape:</h5>
+                    <ul>
+                        <li>Initial Silence: Start with very minimal ambient sound.</li>
+                        <li>Gradual Introduction: As objects are awakened, trigger their specific sound cues (fountain gurgle, chimes, subtle hums).</li>
+                        <li>Ambient Track: Slowly fade in a very subtle, atmospheric background track as more of the world awakens.</li>
+                    </ul>
+                    <h5>Glow Effects:</h5>
+                    <ul>
+                        <li>Lambda Expressions: When a lambda expression is correctly formed in the UI, make the glyphs glow faintly using UMG animation or by changing their material parameters.</li>
+                        <li>Activated Objects: Use particle systems (Niagara is preferred for UE5) for subtle light emissions, shimmers, or energy pulses from awakened objects.</li>
+                    </ul>
+                    <h5>Faded Scrolls:</h5>
+                    <ul>
+                        <li>Animation: When a scroll is activated, use a Timeline to animate a Texture Parameter on its material, revealing the glyphs or text. You could also use a simple Dissolve or Wipe effect.</li>
+                    </ul>
+                </div>
+                <div class="stage-sub-section-card">
+                    <h4>7. Unreal Engine Specifics & Best Practices</h4>
+                    <ul>
+                        <li>Blueprints First: For rapid prototyping and most gameplay logic, stick to Blueprints. Only resort to C++ for performance-critical systems or complex data structures that are difficult to manage in Blueprint.</li>
+                        <li>Modular Design: Design your Blueprints and assets to be modular and reusable. For instance, a generic BP_AwakeningObject parent class could handle the color bloom and sound logic, with child Blueprints overriding specific visuals/sounds.</li>
+                        <li>Data Assets: For storing puzzle data (e.g., what value glyphs are needed for which object, what text appears on which scroll), use Data Assets. This keeps your data separate from your logic and makes it easy to iterate on puzzles.</li>
+                        <li>Debugging: Utilize Unreal's robust debugging tools: Blueprint Debugger, Print String nodes, and the Output Log.</li>
+                        <li>Performance: Keep an eye on performance. Optimize materials, polygon counts, and particle systems.</li>
+                    </ul>
+                    <p>By following these steps, you can create a compelling and interactive "Blank Village" experience in Unreal Engine, effectively introducing players to the core concepts of Functionia's lambda calculus.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Functionia Games. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Intersection Observer for scroll animations ---
+            const sections = document.querySelectorAll('.section');
+            const subSectionCards = document.querySelectorAll('.stage-sub-section-card');
+            const footer = document.querySelector('footer');
+
+            const observerOptions = {
+                root: null, /* viewport */
+                rootMargin: '0px',
+                threshold: 0.1 /* 10% of element visible to trigger */
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); /* Stop observing once animated */
+                    }
+                });
+            }, observerOptions);
+
+            // Observe sections
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Observe sub-section cards
+            subSectionCards.forEach(card => {
+                observer.observe(card);
+            });
+
+            // Observe Footer
+            if (footer) {
+                observer.observe(footer);
+            }
+        });
+    </script>
+</body>
+</html>
